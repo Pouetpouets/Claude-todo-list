@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
+import TodoCard from './TodoCard';
+import { Todo } from '../types';
 
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([
     {
-      id: 1,
+      id: Date.now(),
       text: 'Create a todolist repo with Claude MCP',
       completed: false
     }
@@ -41,56 +37,43 @@ const TodoList: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Claude TodoList</h1>
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Claude TodoList</h1>
       
-      <form onSubmit={handleAddTodo} className="mb-4">
-        <div className="flex gap-2">
+      <form onSubmit={handleAddTodo} className="mb-8">
+        <div className="flex gap-3">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Add a new todo..."
-            className="flex-1 px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
           >
-            Add
+            Add Todo
           </button>
         </div>
       </form>
 
-      <ul className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {todos.map(todo => (
-          <li 
+          <TodoCard
             key={todo.id}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded"
-          >
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => toggleTodo(todo.id)}
-                className="h-5 w-5"
-              />
-              <span className={todo.completed ? 'line-through text-gray-500' : ''}>
-                {todo.text}
-              </span>
-            </div>
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className="text-red-500 hover:text-red-700"
-            >
-              Delete
-            </button>
-          </li>
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+          />
         ))}
-      </ul>
+      </div>
 
       {todos.length === 0 && (
-        <p className="text-gray-500 text-center">No todos yet!</p>
+        <div className="text-center py-12">
+          <div className="text-gray-400 text-6xl mb-4">📝</div>
+          <p className="text-gray-500 text-xl">No todos yet! Add your first todo above.</p>
+        </div>
       )}
     </div>
   );
