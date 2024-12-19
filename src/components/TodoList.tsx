@@ -7,7 +7,13 @@ interface Todo {
 }
 
 const TodoList: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([
+    {
+      id: 1,
+      text: 'Create a todolist repo with Claude MCP',
+      completed: false
+    }
+  ]);
   const [inputValue, setInputValue] = useState('');
 
   const handleAddTodo = (e: React.FormEvent) => {
@@ -36,7 +42,7 @@ const TodoList: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Todo List</h1>
+      <h1 className="text-2xl font-bold mb-4">Claude TodoList</h1>
       
       <form onSubmit={handleAddTodo} className="mb-4">
         <div className="flex gap-2">
