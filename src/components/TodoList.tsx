@@ -20,12 +20,12 @@ const TodoList: React.FC = () => {
     },
     doing: {
       id: 'doing',
-      title: 'Doing',
+      title: 'In Progress',
       taskIds: todos.filter(t => t.status === 'doing').map(t => t.id)
     },
     done: {
       id: 'done',
-      title: 'Done',
+      title: 'Completed',
       taskIds: todos.filter(t => t.status === 'done').map(t => t.id)
     }
   });
@@ -126,59 +126,68 @@ const TodoList: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Claude TodoList</h1>
-      
-      <form onSubmit={handleAddTodo} className="max-w-2xl mx-auto mb-8">
-        <div className="flex gap-3">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Add a new todo..."
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-          >
-            Add Todo
-          </button>
-        </div>
-      </form>
+    <div className="min-h-screen bg-background p-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+          Claude TodoList
+        </h1>
+        
+        <form onSubmit={handleAddTodo} className="max-w-2xl mx-auto mb-12">
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Add a new todo..."
+              className="flex-1 px-4 py-3 bg-card-bg border border-border-color rounded-xl text-text-primary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent placeholder-text-secondary"
+            />
+            <button
+              type="submit"
+              className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background transition-colors duration-200"
+            >
+              Add Todo
+            </button>
+          </div>
+        </form>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {Object.values(columns).map(column => (
-            <div key={column.id} className="bg-gray-50 p-4 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">{column.title}</h2>
-              <Droppable droppableId={column.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`min-h-[200px] ${snapshot.isDraggingOver ? 'bg-blue-50' : ''} rounded-lg transition-colors duration-200 p-2`}
-                  >
-                    {column.taskIds.map((taskId, index) => {
-                      const todo = todos.find(t => t.id === taskId);
-                      if (!todo) return null;
-                      return (
-                        <TodoCard
-                          key={todo.id}
-                          todo={todo}
-                          index={index}
-                          onDelete={deleteTodo}
-                        />
-                      );
-                    })}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          ))}
-        </div>
-      </DragDropContext>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.values(columns).map(column => (
+              <div key={column.id} className="bg-card-bg rounded-xl p-4 border border-border-color">
+                <h2 className="text-lg font-semibold mb-4 text-text-primary px-2">
+                  {column.title}
+                  <span className="ml-2 text-sm text-text-secondary">
+                    ({column.taskIds.length})
+                  </span>
+                </h2>
+                <Droppable droppableId={column.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`min-h-[200px] ${snapshot.isDraggingOver ? 'bg-accent/5' : ''} rounded-lg transition-colors duration-200 p-2`}
+                    >
+                      {column.taskIds.map((taskId, index) => {
+                        const todo = todos.find(t => t.id === taskId);
+                        if (!todo) return null;
+                        return (
+                          <TodoCard
+                            key={todo.id}
+                            todo={todo}
+                            index={index}
+                            onDelete={deleteTodo}
+                          />
+                        );
+                      })}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            ))}
+          </div>
+        </DragDropContext>
+      </div>
     </div>
   );
 };
